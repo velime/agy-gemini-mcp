@@ -9,6 +9,25 @@ images), so your Claude limits go mostly to reviewing.
 
 This project is not affiliated with Google or Anthropic. Read the "Risks" section before you use it.
 
+## Claude writes about 4 to 5 times less on big coding tasks (our estimate)
+
+One large task we ran end to end: a small expression language (parser, evaluator, CLI, 71 tests).
+
+| | Text written by Claude | Approx. tokens |
+| --- | --- | --- |
+| If Claude wrote it directly | 2,096 lines, 78 KB of code | about 22,000 output tokens |
+| Delegated to Gemini | two briefs and review scripts, about 15 KB | about 4,400 output tokens |
+
+Claude also read about 29 KB (around 7,000 input tokens) of the code in review. Gemini spent roughly
+0.7M tokens of the Google quota and 13 + 7.5 minutes of waiting on that task (first version, then four
+fixes after Claude's review found real bugs).
+
+What this number is not: a measurement of your plan's usage limit. It counts only the text Claude
+writes, from file sizes at about 3.5 characters per token. Every tool call also re-reads the
+conversation, and thinking adds cost on both sides, so the saving in total usage is smaller than the
+output ratio and depends on your plan. We did not measure against the usage counter. For small tasks
+there is no saving at all, and the `gemini-code` skill makes Claude do those itself.
+
 ## Why Antigravity CLI and not Gemini CLI
 
 Google stopped serving Gemini CLI to individual accounts (including Google AI Pro) on 18 June 2026
@@ -113,8 +132,8 @@ minutes for a 500-line job). Without the skill, give Claude an instruction like 
 > with `conversation_id`. Stop after 5 rounds and report.
 
 When it is worth it: large, write-heavy work (new modules, many files, boilerplate, tests). Claude
-spends tokens on the brief and the review instead of on generating hundreds of lines. This is an
-estimate, not a measurement: roughly 2 to 4 times less Claude usage on such tasks.
+spends tokens on the brief and the review instead of on generating hundreds of lines (see the estimate
+at the top: about 4 to 5 times less text written by Claude, and a smaller saving in total usage).
 When it is not: small fixes in one or two files. Writing the brief, waiting minutes and reading the
 answer costs more than just doing it.
 
