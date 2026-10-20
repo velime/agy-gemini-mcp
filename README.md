@@ -82,6 +82,12 @@ project (or `~/.claude/skills/`) to get the coding and image workflows described
 Settings (environment variables): `AGY_PATH` (path to the `agy` binary, found automatically on
 Windows), `AGY_WORK_ROOT` (the only folder Gemini may work in, default `~/gemini-work`).
 
+Tested on: Windows 11, Node.js 24, Python 3.13, Antigravity CLI 1.4.2 and 1.4.3, Claude Code in the
+Claude desktop app. Linux and macOS are not tested: the server falls back to an `agy` found on `PATH`
+there, and everything else uses portable paths, but we have not run it. The live view
+(`tools/watch_agy.py`) reads agy's internal step log, which is undocumented and may change in an agy
+update.
+
 ## How it works inside
 
 Three tools:
