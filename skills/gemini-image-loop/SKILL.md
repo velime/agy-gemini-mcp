@@ -52,7 +52,17 @@ How to write it:
   must not appear. Add only detail that clarifies or pins down something the user left open; do not
   add ideas that change the result's meaning.
 - Say things positively and concretely ("an empty white background") rather than as bare prohibitions.
-- Anything you do not write down, Gemini may change or invent. This matters most in later rounds.
+- Keep the prompt short and plain: what to draw or change, and in a few words what to leave as it is.
+  Do NOT demand "exactly", "pixel-identical" or "nothing else may change", and do not write a long
+  keep-list. Measured on one task: with such a prompt Gemini's agent ran 42 Python/Pillow steps (palette
+  extraction, face location, array diffs, compositing) and took 9+ minutes; with a short prompt that
+  said "use only your image generation tool, do not use Python or any image library" the same edit took
+  79 seconds and a quarter of the tokens. The image sub-agent itself is fast; the time goes into the
+  pixel-level post-processing that strict wording triggers.
+- Always add this line to every prompt: "Use only your image generation tool for this. Do not use
+  Python or any image library, and do not post-process the result."
+- Gemini may redraw parts you did not mention. Name the few things that matter (a face, a logo, the
+  background) and accept small drift; if something important changed, say so in the next round.
 
 `agy_run` with `workdir: img-<short-name>`, `timeout_min: 10` and a prompt of this shape:
 
@@ -62,7 +72,8 @@ v1.png (PNG) in the current directory.
 
 <the image prompt, version 1>
 
-Do not describe the image back to me. Reply with the file path and one line on what you drew.
+Use only your image generation tool for this. Do not use Python or any image library, and do not
+post-process the result. Reply with the file path and one line on what you drew.
 If you cannot generate the image, reply exactly CANNOT and say why.
 ```
 
@@ -90,17 +101,20 @@ Before writing the prompt, Read the photo yourself so you know what is in it. Th
 to keep and what to change:
 
 ```text
-Edit the existing photo input.png in the current directory. Use it as the starting image: keep
-<everything that must stay: subject, background, framing, lighting, colors, faces, text> exactly as it
-is. The only change: <the edit, concrete and visual>. Save the result as v1.png (PNG) in the current
-directory. Do not overwrite input.png. Reply with the file path and one line on what you changed.
-If you cannot edit an existing image and can only draw from scratch, reply exactly CANNOT-EDIT and
-say why.
+Edit the image input.png in the current directory: <the edit, concrete and visual, one or two
+sentences>. Leave the rest of the picture as it is<, including the few things that matter>. Save the
+result as v1.png in the current directory. Do not overwrite input.png. Use only your image generation
+tool for this. Do not use Python or any image library, and do not post-process the result. Reply with
+the file path and one line on what you changed. If you cannot edit an existing image and can only
+draw from scratch, reply exactly CANNOT-EDIT and say why.
 ```
 
-Rules from Step 2 still apply (English prompt, meaning is the user's, say what must stay because anything
-unsaid may change). In Step 3, also compare with `input.png`: whatever was supposed to stay must be
-unchanged. Step 4 rewrites the prompt as usual.
+Rules from Step 2 still apply (English prompt, short, meaning is the user's, no "exactly", no Python).
+Reference images (a logo or character the user wants copied) go into the work folder too, as
+`ref-<name>.png`, and the prompt says "the character shown in ref-<name>.png" plus a one-line plain
+description of it. In Step 3, also compare with `input.png`: whatever mattered must be unchanged; small
+drift elsewhere (a different output size, slightly redrawn details) is expected and not a failure.
+Step 4 rewrites the prompt as usual.
 
 ## Step 3: look and judge (you, not Gemini)
 
@@ -117,8 +131,9 @@ Take the previous prompt and change it only at the places that explain the faile
 - split a crowded scene into clearer parts, or move an important point to the start.
 
 Leave every other sentence word for word. Gemini redraws the whole picture on every call (observed: asked
-only to recolor a mug, it also changed the background and the room), so the parts that were good must
-be pinned down in the prompt text itself, not left to Gemini's memory of the last image. The meaning
+only to recolor a mug, it also changed the background and the room), so name the few
+parts that matter in the prompt itself instead of relying on Gemini's memory of the last image (still
+short, see Step 2). The meaning
 stays the user's: you are making the prompt clearer, not changing the request.
 
 Send the full revised prompt with `agy_run` (same `workdir`, new file name `v<N+1>.png`), in the same

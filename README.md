@@ -129,6 +129,12 @@ and sends the full revised prompt again. Up to 5 iterations, and it stops to ask
 tries in a row. When Claude judges the image correct, it shows it to you and asks whether it is right.
 Each look at an image costs some Claude usage, hence the cap.
 
+Speed: keep prompts short. We measured the same photo edit twice. A long prompt that demanded that
+everything else stay "exactly" the same made Gemini's agent run 42 Python/Pillow steps (palette
+extraction, array diffs, compositing) and take 9+ minutes. A short prompt that said "use only your image
+generation tool, do not use Python or any image library" took 79 seconds and about a quarter of the
+tokens. The skill is written this way.
+
 The same loop edits an existing photo. Gemini only sees files in its work folder, so Claude copies your
 photo there as `input.png` (a photo you attach in the Claude chat is saved by the client to a file whose
 path Claude sees; a photo from a folder is copied from there; the original is never touched), looks at
