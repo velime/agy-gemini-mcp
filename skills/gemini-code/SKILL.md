@@ -85,6 +85,26 @@ Tell the user: where the files are (`<workdir>`), what you checked, which bugs y
 is still not covered, and how long and how many Gemini tokens it took (`usage` in the result). If the
 code should go into the user's project, ask before copying it there.
 
+## Journal
+
+After the report (Step 5), append one entry per finished task to `JOURNAL.md` in the work root, which is
+the folder that contains the task's `workdir`. If the file does not exist, create it with the first line
+`# Gemini work journal`. Only append; never rewrite old entries. Tell the user once where the journal is.
+
+```text
+## <YYYY-MM-DD HH:MM> <workdir name> (gemini-code, <size>)
+- Task: <one line, in the user's words>
+- Jobs: <number>; for each: what it was, seconds, total_tokens
+- Result: <done / partly / failed>; <test result or what you ran>
+- Found in review: <the bugs you found, or none>
+- Problems: <agy_error, API stalls, region or quota errors, or none>
+- Claude: <size of your brief, how many files you read>
+```
+
+Take the numbers from the results (`elapsed_s`, `usage`), do not guess; write `unknown` where you have
+none. At most 8 lines. No secrets or personal data. This journal is also the data for judging whether
+delegating paid off.
+
 ## Rules
 
 - The user's explicit wishes beat the defaults in this skill. If they ask for exact, thorough or

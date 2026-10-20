@@ -160,6 +160,24 @@ point, how many iterations it took, and any point that never passed. If the prom
 user did not mention, say which. Then ask whether it is right or needs changes. If the image should go
 into the user's project, ask before copying it there.
 
+## Journal
+
+After the report (Step 5), append one entry per finished task to `JOURNAL.md` in the work root, which is
+the folder that contains the task's `workdir`. If the file does not exist, create it with the first line
+`# Gemini work journal`. Only append; never rewrite old entries. Tell the user once where the journal is.
+
+```text
+## <YYYY-MM-DD HH:MM> <workdir name> (gemini-image-loop)
+- Request: <one line, in the user's words>
+- Iterations: <n of 5>; for each: seconds, total_tokens
+- Result: <accepted by the user / stopped / failed>; final file <workdir>/v<N>.png
+- Checklist: <how many points passed of how many, and which never did>
+- Problems: <agy_error, quota or region errors, slow runs and why, or none>
+```
+
+Take the numbers from the results (`elapsed_s`, `usage`), do not guess; write `unknown` where you have
+none. At most 8 lines. No secrets or personal data.
+
 ## Rules
 
 - The user's explicit wishes beat the defaults in this skill. If they ask for exactness ("keep

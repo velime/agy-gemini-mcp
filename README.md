@@ -124,6 +124,12 @@ In the Claude desktop app the skills open it for you in a Terminal tab called "G
 what Gemini is doing without leaving Claude. It follows the most recently active conversation
 (`--conversation ID` to pick one, `--from-start` to also print earlier steps).
 
+Journal: the skills make Claude keep a journal of delegated work. After each finished task Claude appends
+a short entry to `JOURNAL.md` in the work root: what was asked, how many Gemini jobs, seconds and tokens,
+the result, what the review found, and any problem (API stall, region or quota error). It is plain
+Markdown that you can read, and it is the data for judging whether delegating paid off, for example
+before replacing the estimate at the top of this page with a measurement.
+
 ## Using Gemini for code, with Claude as the reviewer
 
 The skill `gemini-code` does this and sizes the work first: tiny edits Claude does itself (delegating
