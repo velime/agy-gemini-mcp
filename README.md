@@ -120,11 +120,14 @@ checked: a red apple on white, a mug with text). It is weak at following a brief
 - every correction redraws the whole picture. Asked only to recolor a mug from blue to red, it also
   changed the background and the room.
 
-So Claude acts as an art director (skill `gemini-image-loop`): it turns your request into a checklist,
-asks Gemini for an image, looks at the PNG itself, writes exact corrections ("the headline must read
-SALE -50%, keep the background, framing and lighting"), and sends them into the same Gemini
-conversation. Up to 5 iterations, and it stops to ask you after 3 failed tries in a row. Each look at
-an image costs some Claude usage, hence the cap.
+So Claude acts as an art director (skill `gemini-image-loop`). It turns your request, in any language,
+into a checklist and an English prompt that Gemini can follow: the meaning stays yours, but details are
+made concrete (subject, framing, lighting, background, what must not appear). It sends the prompt to
+Gemini, looks at the PNG itself, and checks it against the checklist. Where the image is wrong, Claude
+rewrites the prompt at exactly those places (more detail, clearer wording, everything else unchanged)
+and sends the full revised prompt again. Up to 5 iterations, and it stops to ask you after 3 failed
+tries in a row. When Claude judges the image correct, it shows it to you. Each look at an image costs
+some Claude usage, hence the cap.
 
 ## Tournament skill (optional)
 
