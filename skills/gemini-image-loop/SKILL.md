@@ -77,6 +77,11 @@ post-process the result. Reply with the file path and one line on what you drew.
 If you cannot generate the image, reply exactly CANNOT and say why.
 ```
 
+Live view: right after starting the job, if you have a terminal tool (the Claude desktop app's Terminal
+panel), run `python <directory of server.mjs>/tools/watch_agy.py` in a tab titled `Gemini live` (reuse
+the tab if it is already open) so the user can watch what Gemini does. Tell the user once that the tab
+exists. If there is no terminal tool, skip this.
+
 Then `agy_result` (wait_s 45, repeat while `state` is `running`). Keep the `conversation_id` from the
 result.
 

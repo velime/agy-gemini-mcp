@@ -88,6 +88,17 @@ Details that matter:
   runs with auto-approve, so Gemini can in principle run commands that touch other places.
 - Jobs are kept in memory only; restarting the server forgets running jobs.
 
+Live view of what Gemini is doing: `tools/watch_agy.py` reads agy's own step log read-only and prints
+one line per step as it happens (commands it runs, files it writes, sub-agent calls, API errors):
+
+```bash
+python tools/watch_agy.py
+```
+
+In the Claude desktop app the skills open it for you in a Terminal tab called "Gemini live", so you see
+what Gemini is doing without leaving Claude. It follows the most recently active conversation
+(`--conversation ID` to pick one, `--from-start` to also print earlier steps).
+
 ## Using Gemini for code, with Claude as the reviewer
 
 The skill `gemini-code` does this and sizes the work first: tiny edits Claude does itself (delegating

@@ -52,6 +52,11 @@ Call `agy_run` with the `workdir` (a new folder per task), the brief, `effort` a
 table. Then `agy_result` with `wait_s: 50`, repeated while `state` is `running`. Say nothing to the user
 between polls.
 
+Live view: right after starting the job, if you have a terminal tool (the Claude desktop app's Terminal
+panel), run `python <directory of server.mjs>/tools/watch_agy.py` in a tab titled `Gemini live` (reuse
+the tab if it is already open) so the user can watch every step Gemini takes (commands, files written,
+API errors). Tell the user once that the tab exists. If there is no terminal tool, skip this.
+
 ## Step 2: if it takes much longer than expected
 
 If a job runs past twice the expected time, look at the work folder (file names and times). New files
