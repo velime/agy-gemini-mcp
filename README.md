@@ -126,8 +126,14 @@ made concrete (subject, framing, lighting, background, what must not appear). It
 Gemini, looks at the PNG itself, and checks it against the checklist. Where the image is wrong, Claude
 rewrites the prompt at exactly those places (more detail, clearer wording, everything else unchanged)
 and sends the full revised prompt again. Up to 5 iterations, and it stops to ask you after 3 failed
-tries in a row. When Claude judges the image correct, it shows it to you. Each look at an image costs
-some Claude usage, hence the cap.
+tries in a row. When Claude judges the image correct, it shows it to you and asks whether it is right.
+Each look at an image costs some Claude usage, hence the cap.
+
+The same loop edits an existing photo. Gemini only sees files in its work folder, so Claude copies your
+photo there as `input.png` (a photo you attach in the Claude chat is saved by the client to a file whose
+path Claude sees; a photo from a folder is copied from there; the original is never touched), looks at
+it, and writes a prompt that says what to keep and what to change. We checked it: given an apple photo,
+Gemini added a ribbon to the stem and left the apple, leaf, background, framing and lighting as they were.
 
 ## Tournament skill (optional)
 

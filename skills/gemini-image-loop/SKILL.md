@@ -5,8 +5,9 @@ description: >-
   into an English prompt Gemini understands (same meaning, more concrete detail), send it to
   Gemini through the `agy` MCP server (Google AI Pro login, no API key), look at the PNG
   yourself, and when it is wrong rewrite the prompt where the flaws are and send it again, up
-  to 5 times. Use when the user wants an image, picture, logo, illustration or mockup made
-  by Gemini, or says Gemini keeps misunderstanding what to draw.
+  to 5 times. Also edits an existing photo (from the chat or a folder). Use when the user wants
+  an image, picture, logo, illustration, mockup or photo edit made by Gemini, or says Gemini keeps
+  misunderstanding what to draw.
 argument-hint: "<what to draw, plus any must-haves>"
 ---
 
@@ -72,6 +73,35 @@ If `status` is not SUCCESS, or the result has `error`, `stderr` or `raw_stdout` 
 RESOURCE_EXHAUSTED) or region ("location is not supported"): stop and tell the user. Do not loop
 against a quota error.
 
+## Editing an existing photo instead of drawing from scratch
+
+Same loop, but the starting point is the user's photo. Verified: given `input.png` in the work folder,
+Gemini edits it (a ribbon added to an apple, everything else unchanged).
+
+Getting the photo to Gemini: Gemini can only see files in its work folder, so copy the photo in as
+`input.png` (more photos: `input-2.png`, ...) and never point the work folder at the user's own
+folder. Copy, do not move: the original stays untouched.
+- The user pasted or attached the photo in the chat: the client saves it to a file and shows its path
+  with the message (for example `[Image: source: C:\...\images\1.png]`). Copy that file into the work
+  folder. If no path is shown, ask the user to give the file path or to drop the file into the work folder.
+- The photo is in a folder: copy it from there.
+
+Before writing the prompt, Read the photo yourself so you know what is in it. The prompt then says what
+to keep and what to change:
+
+```text
+Edit the existing photo input.png in the current directory. Use it as the starting image: keep
+<everything that must stay: subject, background, framing, lighting, colors, faces, text> exactly as it
+is. The only change: <the edit, concrete and visual>. Save the result as v1.png (PNG) in the current
+directory. Do not overwrite input.png. Reply with the file path and one line on what you changed.
+If you cannot edit an existing image and can only draw from scratch, reply exactly CANNOT-EDIT and
+say why.
+```
+
+Rules from Step 2 still apply (English prompt, meaning is the user's, say what must stay because anything
+unsaid may change). In Step 3, also compare with `input.png`: whatever was supposed to stay must be
+unchanged. Step 4 rewrites the prompt as usual.
+
 ## Step 3: look and judge (you, not Gemini)
 
 Read `v<N>.png`. Check every acceptance point, one by one, honestly. Common Gemini failures: text in
@@ -99,14 +129,16 @@ its earlier attempts.
 Limits: at most **5 iterations** in total (v1 counts as the first). At most **3 tries in a row**
 without the user's OK: after the third failed check, show the user the latest image path, what is
 still wrong, and ask whether to continue, change the request, or stop. After the 5th, stop and report.
+When you think the image matches, do not just finish: show it and ask the user whether it is right or
+needs changes. The user decides when it is done.
 
 ## Step 5: report
 
 Give the user the image itself (attach or display the PNG wherever the client allows it, not only its
 path) and: the final file path (`<workdir>/v<N>.png`), the acceptance list with a pass or fail per
 point, how many iterations it took, and any point that never passed. If the prompt grew details the
-user did not mention, say which. If the image should go into the user's project, ask before copying it
-there.
+user did not mention, say which. Then ask whether it is right or needs changes. If the image should go
+into the user's project, ask before copying it there.
 
 ## Rules
 
