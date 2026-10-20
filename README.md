@@ -103,8 +103,22 @@ estimate, not a measurement: roughly 2 to 4 times less Claude usage on such task
 When it is not: small fixes in one or two files. Writing the brief, waiting minutes and reading the
 answer costs more than just doing it.
 
-Costs on the Gemini side, measured on our runs: about 250k tokens and 4 to 6 minutes per job. Your
-Google quota is the new bottleneck, so keep tasks focused.
+Costs on the Gemini side, measured on our runs: a large first job (a 550-line tool with tests) took 14
+minutes and about 420k tokens; a small, narrowly worded job (a 54-line tool with tests) took 27 seconds
+and 57k tokens; a follow-up fix in the same conversation took 40 seconds to 2 minutes. Your Google
+quota is the new bottleneck, so keep tasks focused.
+
+Why jobs can be slow, found by reading agy's own step log (`~/.gemini/antigravity-cli/conversations`):
+- Exploration and scratch scripts. If the brief invites it ("match the real HTML", "be exact"), the
+  agent runs dozens of experiments. For the 550-line job, 31 Python scripts and 35 file reads and writes.
+  Ask for the work directly: "write the files directly, do not explore, no scratch files, run the tests
+  once".
+- Long generation. Writing big files with a thinking model is slow (33k thinking tokens in that job).
+  `effort: low` removes most of the thinking.
+- API stalls. In that job 300 of the 966 seconds were one "stream idle timeout (5m0s)" followed by an
+  automatic retry. The job still finishes, so a status of `ERROR` with a complete answer is possible.
+  The server returns the cause in `agy_error`. Nothing on our side can prevent this; it is the
+  service. Earlier jobs showed a similar loss to an `INTERNAL (code 500)` error.
 
 Gemini works in a folder under the work root. To let it edit a real project, either copy the project
 there and merge the result after review, or set `AGY_WORK_ROOT` to the folder that holds your projects

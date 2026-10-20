@@ -73,8 +73,12 @@ function report(job) {
   let parsed = null;
   try { parsed = JSON.parse(raw); } catch { /* not json */ }
   const res = { job_id: job.id, state: job.state, elapsed_s: secs, workdir: job.cwd };
-  if (parsed) Object.assign(res, { status: parsed.status, conversation_id: parsed.conversation_id, response: parsed.response, usage: parsed.usage });
-  else res.raw_stdout = raw.slice(0, 4000);
+  if (parsed) {
+    Object.assign(res, { status: parsed.status, conversation_id: parsed.conversation_id, response: parsed.response, usage: parsed.usage });
+    // agy reports API trouble here even when the job still finished (e.g. a 5 minute stream idle timeout
+    // followed by an automatic retry). Pass it through: it explains jobs that took far too long.
+    if (parsed.error) res.agy_error = parsed.error;
+  } else res.raw_stdout = raw.slice(0, 4000);
   if (stderr) res.stderr = stderr.slice(-2000);
   if (job.spawnError) res.error = job.spawnError;
   // exit 0 with empty output is the known silent-failure mode (quota, bad auth)
