@@ -45,6 +45,10 @@ vague; otherwise just use it.
 - `prompt`: the template below, filled in
 - `timeout_min`: 10
 
+Write every prompt to Gemini in English, even when the user wrote in another language: translate the
+request and the checklist yourself. Text that must appear inside the image stays exactly as the user
+wants it, in its own language and spelling, in quotes.
+
 ```text
 Generate an image with your image generation ability and save it as
 v1.png (PNG) in the current directory.
@@ -103,7 +107,8 @@ still wrong, and ask whether to continue, change the brief, or stop. After the 5
 
 ## Step 5: report
 
-Give the user: the final file path (`<workdir>/v<N>.png`), the acceptance
+Give the user the image itself (attach or display the PNG wherever the client allows it, not only its
+path) and: the final file path (`<workdir>/v<N>.png`), the acceptance
 list with a pass or fail per point, how many iterations it took, and any point that never passed.
 If the image should go into the user's project, ask before copying it there.
 
