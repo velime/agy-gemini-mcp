@@ -157,6 +157,11 @@ into the user's project, ask before copying it there.
 
 ## Rules
 
+- The user's explicit wishes beat the defaults in this skill. If they ask for exactness ("keep
+  everything else exactly the same", "pixel-identical", "be precise"), write exactly that into the
+  prompt and drop the "no Python / do not post-process" line, because pixel-level compositing is how
+  Gemini guarantees it. Tell the user in one line that this is slower (minutes, not seconds, and many
+  more tokens). If they ask for speed, keep the prompt short.
 - You judge every image yourself; never ask Gemini whether its image is good.
 - Same work folder for the whole loop, new file name per version (`v1`, `v2`, ...) so nothing is
   overwritten and the user can compare.

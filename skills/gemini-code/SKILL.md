@@ -82,6 +82,9 @@ code should go into the user's project, ask before copying it there.
 
 ## Rules
 
+- The user's explicit wishes beat the defaults in this skill. If they ask for exact, thorough or
+  fully specified work, a particular `effort`, or to delegate even a tiny edit, do it that way. Tell
+  them in one line what it costs in time and Gemini tokens, then follow the request.
 - Size first. Tiny means you do it.
 - Short brief for small tasks, full brief only for large ones.
 - Review every result yourself. Read before you run.
