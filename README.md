@@ -57,8 +57,8 @@ two small real requests to Gemini):
 node selftest.mjs
 ```
 
-Optional: copy `skills/gemini-image-loop` into `.claude/skills/` of your project (or
-`~/.claude/skills/`) to get the image workflow described below.
+Optional: copy `skills/gemini-code` and `skills/gemini-image-loop` into `.claude/skills/` of your
+project (or `~/.claude/skills/`) to get the coding and image workflows described below.
 
 Settings (environment variables): `AGY_PATH` (path to the `agy` binary, found automatically on
 Windows), `AGY_WORK_ROOT` (the only folder Gemini may work in, default `~/gemini-work`).
@@ -90,7 +90,11 @@ Details that matter:
 
 ## Using Gemini for code, with Claude as the reviewer
 
-Give Claude an instruction like this (or put it in `CLAUDE.md`):
+The skill `gemini-code` does this and sizes the work first: tiny edits Claude does itself (delegating
+would cost more than the edit), small tasks go out as a short direct brief on `effort: low` (seconds to
+2 minutes), medium and large tasks get a full brief, more time and a heads-up to the user (around 15
+minutes for a 500-line job). Without the skill, give Claude an instruction like this (or put it in
+`CLAUDE.md`):
 
 > For big coding tasks, do not write the code yourself. Delegate with the `agy` tools: write a brief with
 > concrete acceptance criteria, run it with `agy_run` in a folder under the work root, read the result
